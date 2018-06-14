@@ -1,6 +1,8 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import {Link} from 'react-router-dom';
+
 import './UserList.css';
 
 const UserList = () => (
@@ -9,6 +11,7 @@ const UserList = () => (
       {
         users(first: 10) {
           name
+          id
         }
       }
     `}
@@ -21,8 +24,8 @@ const UserList = () => (
           <div className="UserList">
           <h1>Users:</h1>
         <ul>
-          {data.users.map(({name}, i) => (
-          <li key={i}>{name}</li>
+          {data.users.map(({name, id}, i) => (
+          <li key={i}><Link to={`/users/${id}`}>{name}</Link></li>
           ))}
         </ul>
         </div>

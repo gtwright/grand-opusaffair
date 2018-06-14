@@ -34,6 +34,7 @@ type Category {
 
 type Query {
     users(id: ID, name: String, first: Int = 10, offset: Int = 0): [User]
+    user(id: ID, name: String, first: Int = 10, offset: Int = 0): User
     businesses(id: ID, name: String, first: Int = 10, offset: Int = 0): [Business]
     reviews(id: ID, stars: Int, first: Int = 10, offset: Int = 0): [Review]
     category(name: ID!): Category
@@ -43,6 +44,7 @@ type Query {
 export const resolvers = {
   Query: {
     users: neo4jgraphql,
+    user: neo4jgraphql,
     businesses: neo4jgraphql,
     reviews: neo4jgraphql,
     category: neo4jgraphql

@@ -1,8 +1,9 @@
 const {gql} = require('apollo-server');
 
 // Default to start search today and look 30 days ahead
-var start = Math.round((new Date()).getTime() / 1000);
-var end = start + (30 * 24 * 60 * 60);
+var today = Math.round((new Date()).getTime() / 1000);
+var inAMonth = today + (30 * 24 * 60 * 60);
+var aMonthAgo = today - (30 * 24 * 60 * 60);
 
 // Set defaults for Boston
 const lat = 42.3601,
@@ -55,8 +56,8 @@ type Query {
       title: String = "",
       limit: Int = 10,
       skip: Int = 0,
-      start: Float = ${start},
-      end: Float = ${end},
+      start: Float = ${today},
+      end: Float = ${inAMonth},
       lat: Float = ${lat},
       lng: Float = ${lng},
       radius: Float = ${radius}
@@ -65,8 +66,26 @@ type Query {
       title: String = "",
       limit: Int = 10,
       skip: Int = 0,
-      start: Float = ${start},
-      end: Float = ${end},
+      start: Float = ${today},
+      end: Float = ${inAMonth},
+      lat: Float = ${lat},
+      lng: Float = ${lng},
+      radius: Float = ${radius}
+    ): [Event]
+    pastEvents(
+      title: String = "",
+      limit: Int = 10,
+      skip: Int = 0,
+      start: Float = ${aMonthAgo},
+      end: Float = ${today},
+      lat: Float = ${lat},
+      lng: Float = ${lng},
+      radius: Float = ${radius}
+    ): [Event]
+    updatedEvents(
+      title: String = "",
+      limit: Int = 10,
+      skip: Int = 0,
       lat: Float = ${lat},
       lng: Float = ${lng},
       radius: Float = ${radius}

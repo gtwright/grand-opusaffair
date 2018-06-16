@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
-import {Switch, Route } from 'react-router-dom';
-import {MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-import EventList from './components/EventList';
-import EventDetail from './components/EventDetail';
+import { Switch, Route } from 'react-router-dom';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme from './Theme';
+import EventListView from './components/events/EventListView';
+import EventDetail from './components/events/EventDetail';
 import Header from './components/Header';
 import NotFound from './components/NotFound';
 
-import './App.css';
-
-const theme = createMuiTheme({typography: {
-    // Use the system font instead of the default Roboto font.
-    fontFamily: 'Arial'}
-  });
 
 class App extends Component {
   render() {
@@ -23,8 +17,8 @@ class App extends Component {
           <Header />
 
           <Switch>
-            <Route exact path="/" component={EventList}/>
-            <Route exact path="/events" component={EventList}/>
+            <Route exact path="/" component={EventListView}/>
+            <Route exact path="/events" component={EventListView}/>
             <Route path="/events/:slug" component={EventDetail} />
             <Route component={NotFound} />
           </Switch>

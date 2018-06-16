@@ -7,7 +7,6 @@ const resolvers = {
     event: neo4jgraphql,
     events(_, params, ctx) {
       let session = ctx.driver.session();
-      console.log(params);
       let query = `
         MAtch (v:Venue)
         WITH v,point({latitude: $lat, longitude: $lng}) as boston
@@ -17,6 +16,22 @@ const resolvers = {
         AND event.title contains $title AND event.published = True
         RETURN event
         ORDER BY event.start_datetime ASC
+        SKIP $skip
+        LIMIT $limit`
+      return session.run(query, params)
+        .then( result => { return result.records.map(record => { return record.get("event").properties })})
+    },
+    pastEvents(_, params, ctx) {
+      let session = ctx.driver.session();
+      let query = `
+        MAtch (v:Venue)
+        WITH v,point({latitude: $lat, longitude: $lng}) as boston
+        WHERE distance(boston,point({latitude:v.latitude, longitude: v.longitude})) < $radius
+        MATCH (v)--(event:Event)
+        WHERE event.end_datetime >= $start AND event.start_datetime <= $end
+        AND event.title contains $title AND event.published = True
+        RETURN event
+        ORDER BY event.start_datetime DESC
         SKIP $skip
         LIMIT $limit`
       return session.run(query, params)
@@ -38,6 +53,22 @@ const resolvers = {
   			RETURN distinct event, 0.25*event.view_count + sum(distinct reduce(weight = 0, r in relationships(pe) | weight + r.weight + u.follower_count ))^2 as total,
   			1000*count(distinct inv)+300*count(distinct att)+100*count(distinct int) + event.view_count + 10*sum(distinct reduce(weight = 0, r1 in relationships(pe) | weight + u.follower_count)) as pop
   			ORDER BY pop DESC
+        SKIP $skip
+        LIMIT $limit`
+      return session.run(query, params)
+        .then( result => { return result.records.map(record => { return record.get("event").properties })})
+    },
+    updatedEvents(_, params, ctx) {
+      let session = ctx.driver.session();
+      console.log(params);
+      let query = `
+        MAtch (v:Venue)
+        WITH v,point({latitude: $lat, longitude: $lng}) as boston
+        WHERE distance(boston,point({latitude:v.latitude, longitude: v.longitude})) < $radius
+        MATCH (v)--(event:Event)
+        WHERE event.title contains $title AND event.published = True
+        RETURN event
+        ORDER BY event.updated_at DESC
         SKIP $skip
         LIMIT $limit`
       return session.run(query, params)

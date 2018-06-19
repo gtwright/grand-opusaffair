@@ -1,7 +1,7 @@
 {
-  "name": "Opus GRAND hack",
+  "name": "opusaffair-grand-stack-ui",
   "version": "0.0.1",
-  "description": "UI app for Opus GRANDstack",
+  "description": "UI app for Opus Affair GRANDstack",
   "dependencies": {
     "@material-ui/core": "^1.2.1",
     "@material-ui/icons": "^1.1.0",

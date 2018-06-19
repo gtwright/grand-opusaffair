@@ -59,7 +59,7 @@ class EventList extends Component {
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                   this.scrollToBottom();
-                  this.updateSearch({limit:data.events.length});
+                  this.updateSearch({limit:data.events.length+fetchMoreResult.events.length});
                   if (fetchMoreResult.events.length === 0) {
                     this.setState({nextPage: false});
                     return prev;

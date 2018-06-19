@@ -14,7 +14,7 @@ const directiveResolvers = {
       throw ForbiddenError(`Must have ${role} permissions to view this field`)
     }
     throw AuthenticationError(`Must be logged in as ${role} to view this field`)
-  },
+  }
 }
 
 module.exports = directiveResolvers;

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Involved = (props) => (
   <li>
-    {props.inv.user.username} ({props.inv.role || "Involved"})
+    {props.inv.user.name_full} ({props.inv.role || "Involved"})
   </li>
 )
 

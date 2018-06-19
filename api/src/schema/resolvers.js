@@ -1,5 +1,10 @@
 import { neo4jgraphql } from "neo4j-graphql-js";
 
+// Default to start search today and look 30 days ahead
+const today = () => Math.round((new Date()).getTime() / 1000);
+const inAMonth = (x) => today() + ((x || 1) * 30 * 24 * 60 * 60);
+const aMonthAgo = (x) => today() - ( (x || 1) * 30 * 24 * 60 * 60);
+
 const resolvers = {
   Query: {
     users: neo4jgraphql,
@@ -7,6 +12,9 @@ const resolvers = {
     event: neo4jgraphql,
     events(_, params, ctx) {
       let session = ctx.driver.session();
+      params.start = params.start || today();
+      params.end = params.end || inAMonth();
+      console.log(params);
       let query = `
         MAtch (v:Venue)
         WITH v,point({latitude: $lat, longitude: $lng}) as boston
@@ -23,6 +31,8 @@ const resolvers = {
     },
     pastEvents(_, params, ctx) {
       let session = ctx.driver.session();
+      params.start = params.start || aMonthAgo();
+      params.end = params.end || today();
       let query = `
         MAtch (v:Venue)
         WITH v,point({latitude: $lat, longitude: $lng}) as boston
@@ -39,7 +49,8 @@ const resolvers = {
     },
     popularEvents(_, params, ctx) {
       let session = ctx.driver.session();
-      console.log(params);
+      params.start = params.start || today();
+      params.end = params.end || inAMonth();
       let query = `
         MAtch (v:Venue)
         WITH v,point({latitude: $lat, longitude: $lng}) as boston
@@ -60,13 +71,16 @@ const resolvers = {
     },
     updatedEvents(_, params, ctx) {
       let session = ctx.driver.session();
+      params.start = params.start || today();
+      params.end = params.end || inAMonth(12);
       console.log(params);
       let query = `
         MAtch (v:Venue)
-        WITH v,point({latitude: $lat, longitude: $lng}) as boston
-        WHERE distance(boston,point({latitude:v.latitude, longitude: v.longitude})) < $radius
+        WITH v,point({latitude: $lat, longitude: $lng}) as home
+        WHERE distance(home,point({latitude:v.latitude, longitude: v.longitude})) < $radius
         MATCH (v)--(event:Event)
         WHERE event.title contains $title AND event.published = True
+        AND event.end_datetime >= $start AND event.start_datetime <= $end
         RETURN event
         ORDER BY event.updated_at DESC
         SKIP $skip

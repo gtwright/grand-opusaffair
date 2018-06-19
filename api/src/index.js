@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import typeDefs from './schema/typeDefs';
 import resolvers from './schema/resolvers';
 import context from './schema/context';
+import directiveResolvers from './schema/directiveResolvers';
 
 //To add: auth, cors?
 
@@ -12,7 +13,8 @@ dotenv.config();
 
 const schema = makeExecutableSchema({
   typeDefs,
-  resolvers
+  resolvers,
+  directiveResolvers
 });
 
 const server = new ApolloServer({

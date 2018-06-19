@@ -1,18 +1,27 @@
 import React, {Component} from "react";
 import gql from "graphql-tag";
-import queryString from 'query-string';
 
 import EventList from './EventList';
+import EventSelectors from './EventSelectors'
 
 class EventListView extends Component {
 
+  state = {
+    view: 'events',
+  }
+
+  handleViewChange = (view) => {
+    console.log(view);
+    this.setState({
+      view
+    })
+  }
+
   render(){
-    const parsed = queryString.parse(this.props.location.search);
-    const choice = ['events','popularEvents','pastEvents', 'updatedEvents'];
 
     const query = gql`
         query ($limit: Int, $skip: Int){
-          events: ${choice[3]}(limit: $limit, skip: $skip) {
+          events: ${this.state.view}(limit: $limit, skip: $skip) {
             title
             slug
             opus_id
@@ -23,7 +32,10 @@ class EventListView extends Component {
     `
 
     return (
-      <EventList query={query} variables={parsed}/>
+      <div>
+        <EventSelectors view={this.state.view} onViewChange={this.handleViewChange} location={this.props.location} />
+        <EventList query={query} />
+      </div>
     )
   }
 }

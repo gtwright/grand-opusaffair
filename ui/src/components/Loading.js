@@ -10,8 +10,10 @@ const Loading = ({classes}) => (
 
 const styles = {
   loading: {
-    alignContent: 'center',
-    alignItems: 'center'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200
   }
 };
 

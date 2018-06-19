@@ -1,10 +1,5 @@
 const {gql} = require('apollo-server');
 
-// Default to start search today and look 30 days ahead
-var today = Math.round((new Date()).getTime() / 1000);
-var inAMonth = today + (30 * 24 * 60 * 60);
-var aMonthAgo = today - (30 * 24 * 60 * 60);
-
 // Set defaults for Boston
 const lat = 42.3601,
       lng = -71.058,
@@ -14,6 +9,7 @@ const typeDefs = gql`
 type User {
   opus_id: ID!
   username: String
+  name_full: String
 }
 
 type Event {
@@ -54,37 +50,37 @@ type Involvement {
 type Query {
     events(
       title: String = "",
-      limit: Int = 10,
+      limit: Int = 12,
       skip: Int = 0,
-      start: Float = ${today},
-      end: Float = ${inAMonth},
+      start: Float,
+      end: Float,
       lat: Float = ${lat},
       lng: Float = ${lng},
       radius: Float = ${radius}
     ): [Event]
     popularEvents(
       title: String = "",
-      limit: Int = 10,
+      limit: Int = 12,
       skip: Int = 0,
-      start: Float = ${today},
-      end: Float = ${inAMonth},
+      start: Float,
+      end: Float,
       lat: Float = ${lat},
       lng: Float = ${lng},
       radius: Float = ${radius}
     ): [Event]
     pastEvents(
       title: String = "",
-      limit: Int = 10,
+      limit: Int = 12,
       skip: Int = 0,
-      start: Float = ${aMonthAgo},
-      end: Float = ${today},
+      start: Float,
+      end: Float,
       lat: Float = ${lat},
       lng: Float = ${lng},
       radius: Float = ${radius}
     ): [Event]
     updatedEvents(
       title: String = "",
-      limit: Int = 10,
+      limit: Int = 12,
       skip: Int = 0,
       lat: Float = ${lat},
       lng: Float = ${lng},
